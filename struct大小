@@ -1,0 +1,23 @@
+struct s
+{
+	char c;//1
+	char c1;//1
+	        //浪费2个字节
+	int a;//4
+};//8
+struct s1
+{
+	char c;//1
+	       //浪费3
+	int a;//4
+	char c1;//1
+	       //4   8    4的倍数  9  变成12
+	
+};//12
+int main()
+{
+	struct s s1 = { 0 };
+	printf("%d\n", sizeof(s1));
+	struct s1 s11 = { 0 };
+	printf("%d\n", sizeof(s11));
+}
