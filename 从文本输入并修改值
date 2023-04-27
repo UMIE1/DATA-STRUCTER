@@ -1,0 +1,56 @@
+void Revise_price(SeqList* list)
+{
+	FILE* pf = fopen("book.txt", "r+");
+	if (pf == NULL)
+		printf("%s\n", strerror(errno));
+	int flag = 1;
+	printf("请输入你要修改价格的书号：\n");
+	do
+	{
+		char arr[20] = "w";
+		scanf("%s", arr);
+		for (int i = 0; i < list->length; i++)
+		{
+			if (strcmp(list->data[i].book_licence, arr) == 0)
+			{
+				printf("找到这本书，请输入您要修改的价格：");
+				//fseek()
+				float price = 0;
+				scanf("%f", &price);
+				list->data[i].price = price;
+				printf("修改成功\n%s %s %f", list->data[i].book_licence, list->data[i].book_name, list->data[i].price);
+				flag = 0;
+				break;
+			}
+		}
+		if(flag==1)
+			printf("输入错误，请重新输入\n");
+	} 
+	while (flag);
+}
+
+int main()
+{
+	DataType book;
+	SeqList list;
+	InitSeqList(&list);
+	int flag = 1;
+	int count = 1;
+	FILE* f;
+	f = fopen("book.txt", "r+");
+	if (f == NULL)
+		printf("%s\n", strerror(errno));
+	while (flag)
+	{
+		fscanf(f, "%s %s %f", book.book_licence, book.book_name, &book.price);
+		if (book.price == 0)
+			flag = 0;
+		printf("%s %s %f\n", book.book_licence, book.book_name, book.price);
+		InsertList(&list, count, book);
+	}
+	Revise_price(&list);
+	//qsort(&list,sizeof(list.data),sizeof(list.data[0]),com_book_price);
+	fclose(f);
+	//print(book);
+	return 0;
+}
