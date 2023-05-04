@@ -1,0 +1,65 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#include"SLinkNode.h"
+#include<stdio.h>
+#include<string.h>
+#include<errno.h>
+void RevisePrice(SLinkNode* list)
+{
+	SLinkNode* L=list->next;
+	//L = list;
+	int flag = 1;
+	char arr[20] = "ooo";
+	do 
+	{
+		printf("请输入修改的书名：\n");
+		scanf("%s", arr);
+		while (L != NULL)
+		{
+			if (strcmp(L->data.book_licence, arr) == 0)
+			{
+				float p = 0;
+				printf("请输入您要修改的价格：\n");
+				scanf("%f", &p);
+				L->data.price = p;
+				flag = 0;
+			}
+			L = L->next;
+		}
+		if(flag==1)
+			printf("输入错误，请重新输入：\n");
+	} while(flag);
+}
+void print(SLinkNode* L)
+{
+	SLinkNode* list=L->next;
+	//list = L;
+	while (list != NULL)
+	{
+		printf("%s %s %2.f\n", list->data.book_licence, list->data.book_name, list->data.price);
+		list = list->next;
+	}
+}
+int main()
+{
+	BookData book;
+	SLinkNode *list;
+	InitList(list);
+	FILE* pf;
+	pf = fopen("book.txt", "rb");
+	if (!pf)
+		return 0;
+	int flag = 1;
+	int count = 0;
+	while (flag)
+	{
+		fscanf(pf, "%s %s %f", book.book_licence, book.book_name, &book.price);
+		printf("%s %s %2.f\n", book.book_licence, book.book_name, book.price);
+		if (book.price == 0)
+			flag = 0;
+		
+		InsElem(list, book, count++);
+	}
+	RevisePrice(list);
+	print(list);
+	return 0;
+}
