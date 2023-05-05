@@ -1,0 +1,73 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#include"SLinkNode.h"
+#include<stdio.h>
+#include<string.h>
+void Delsame(SLinkNode* L)
+{
+	//list遍历起点
+	/*SLinkNode* head = L->next;
+	head = head->next;*/
+	
+	SLinkNode* aim = L->next->next;//被比较的后一个
+	//aim = head2->next;
+	//被比较的书
+	SLinkNode* com = L->next;
+	//用来遍历的变量
+	SLinkNode* temp = L->next;
+	//目标元素的前一个元素
+	SLinkNode* Hm = L;
+	int flag = 1;
+	while (temp != NULL)//
+	{
+		while (aim != NULL)
+		{
+			if (strcmp(com->data.book_licence,aim->data.book_licence) == 0)
+			{
+				
+				//删除
+				Hm->next = com->next;
+				free(com);
+				flag = 0;
+				return;
+			}
+			aim = aim->next;	
+		}
+		Hm = Hm->next;//
+		com = com->next;
+		aim = com->next;//
+		temp = temp->next;
+	}
+	if (flag == 0)
+		printf("链表中没有重复的书！\n");
+}
+void print(SLinkNode* L)
+{
+	SLinkNode *list = L->next;
+	while (list != NULL)
+	{
+		printf("%s %s %2.f\n", list->data.book_licence, list->data.book_name, list->data.price);
+		list = list->next;
+	}
+}
+int main()
+{
+	BookData book;
+	SLinkNode *L;
+	InitList(L);
+	int flag = 1;
+	int count = 1;
+	FILE* pf = fopen("book.txt", "rb");
+	//if (pf == NULL)
+	//	printf("open file %s\n", perror);
+	while (flag)
+	{
+		fscanf(pf, "%s %s %f", book.book_licence, book.book_name, &book.price);
+		if (book.price == 0)
+			flag = 0;
+		InsElem(L, book, count++);
+		printf("%s %s %2.lf\n", book.book_licence, book.book_name, book.price);
+	}
+	Delsame(L);
+	print(L);
+	return 0;
+}
