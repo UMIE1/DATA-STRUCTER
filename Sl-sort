@@ -1,0 +1,72 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#include"SLinkNode.h"
+#include<string.h>
+#include<stdlib.h>
+int cmp_SL_price(void* e1, void* e2)
+{
+	return ((int *)((SLinkNode*)e1))->data.price - ((int*)((SLinkNode*)e2))->data.price;
+}
+void Sl_Sort(SLinkNode*L)
+{
+	SLinkNode* begin = L->next;
+	SLinkNode* head = L->next;
+	SLinkNode* cmp1 = L->next;
+	SLinkNode* cmp2 = L->next->next;
+	SLinkNode* P = L->next->next;
+	//链表排序
+	while(begin!=NULL)
+	{
+		while (P!=NULL)
+		{
+			if (cmp1->data.price > cmp2->data.price)
+			{
+				//sweap
+				SLinkNode* temp;
+				memcpy(&temp, &cmp1->data, sizeof(cmp1));
+				memcpy(&cmp1->data, &cmp2->data, sizeof(cmp1));
+				memcpy(&cmp2->data, &temp, sizeof(cmp2));
+			}
+			begin = begin->next;
+			P = begin->next;
+			cmp1 = L->next;
+			cmp2 = L->next->next;
+		}
+	}
+}
+void print(SLinkNode*L)
+{
+	L = L->next;
+	if (L == NULL)
+	{
+		printf("list 是空表！\n");
+		return;
+	}
+	while (L != NULL)
+	{
+		printf("%s %s %f\n", L->data.book_licence, L->data.book_name, L->data.price);
+		L = L->next;
+	}
+}
+int main()
+{
+	SLinkNode* list;
+	InitList(list);
+	BookData book;
+	FILE* pf = fopen("book.txt", "rb");
+	if (pf == NULL)
+		printf("open file %s\n", perror);
+	int count = 1;
+	int flag = 1;
+	while (flag)
+	{
+		fscanf(pf, "%s %s %f", book.book_licence, book.book_name, &book.price);
+		printf("%s %s %f\n", book.book_licence, book.book_name, book.price);
+		InsElem(list, book, count++);
+		if (book.price == 0)
+			flag = 0;
+	}
+	//Sl_Sort(list);
+	qsort(list,sizeof(list->data),sizeof(list->data),cmp_SL_price);
+	print(list);
+	return 0;
+}
