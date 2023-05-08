@@ -1,0 +1,123 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#include "SLinkNode.h"
+#include<string.h>
+//读入线性表的数据
+int InsElem(SLinkNode *&L,ElemType x,int i)	//插入结点值为x的结点
+{	int j=0;
+	SLinkNode *p=L,*s;
+	if (i<=0) return 0;				//参数i错误返回0
+	while (p!=NULL && j<i-1)		//查找第i-1个结点p
+	{	j++;
+		p=p->next;
+	}
+	if (p==NULL)
+		return 0;					//未找到第i-1个结点时返回0
+	else							//找到第i-1个结点p
+	{	s=(SLinkNode *)malloc(sizeof(SLinkNode));
+		s->data=x;					//创建存放元素x的新结点s
+		s->next=p->next;			//将s结点插入到p结点之后
+		p->next=s;
+		return 1;					//插入运算成功,返回1
+	}
+}
+int DelElem(SLinkNode *&L,int i)	//删除结点
+{	int j=0;
+	SLinkNode *p=L,*q;
+	if (i<=0) return 0;				//参数i错误返回0
+	while (p!=NULL && j<i-1)		//查找第i-1个结点
+	{	j++;
+		p=p->next;
+	}
+	if (p==NULL)
+		return 0;					//未找到第i-1个结点时返回0
+	else							//找到第i-1个结点p
+	{	q=p->next;					//q指向被删结点
+		if (q==NULL)
+			return 0;				//没有第i个结点时返回0
+		else
+		{	p->next=q->next;		//从单链表中删除q结点
+			free(q);				//释放其空间
+			return 1;
+		}
+	}
+}
+int readListFromFile(SLinkNode *L)
+{
+	BookData book;
+	int bookNum=0,flag=1;
+	//示例：从文件中读入图书的数据
+	FILE *f;
+	f=fopen("book.txt","rb");//打开文件
+	if(f==NULL)
+		return 0;
+	while(flag)
+	{
+		fscanf(f,"%s %s %f",book.book_licence,book.book_name,&book.price);
+		if(book.price==0)
+			flag=0;
+		else
+		{
+			bookNum++;
+			InsElem(L,book,bookNum);
+		}
+		printf("%s %s %f\n",book.book_licence,book.book_name,book.price);
+	}
+	
+	fclose(f);//关闭文件
+	
+	return 1;
+	
+}
+void main()
+{
+	BookData book;
+	//定义一个单链表
+	SLinkNode* list;
+	InitList(list);
+	//读入已有图书数据
+	readListFromFile(list);
+	printf("*********************\n");
+	
+               /***输入图书入库的信息*******************/
+	printf("请输入入库的图书信息：\n");
+	printf("请输入入库的图书的书号\n");
+	//BookData temp = {"0","0",0};
+	char lic[20] = "1";
+	scanf("%s", &book.book_licence);
+	//memcpy(&temp.book_licence, lic, sizeof(temp.book_licence));
+	printf("请输入入库的图书名称\n");
+	char name[20] = "1";
+	scanf("%s", book.book_name);
+	//memcpy(&temp.book_name, &name, sizeof(temp.book_name));
+	printf("请输入入库的图书的价格：\n");
+	float price = 0;
+	scanf("%f", &book.price);
+	//memcpy(&temp.price, &price, sizeof(temp.price));
+	printf("请输入入库的图书位置：\n");
+	int x = 0;
+	scanf("%d", &x);
+	//int i = GetLength;
+	//if(x > GetLength)
+	if (InsElem(list, book, x))
+		DispList(list);
+	else
+		printf("插入位置不合法，请重新输入！\n");
+	//if(InsElem==1)
+	
+	/***图书入库*******************/
+	
+	//输出现有图书信息
+	
+
+	printf("请输入出库的图书位置：\n");
+	
+	/***图书出库*******************/
+	int del = 0;
+	scanf("%d", &del);
+	if (DelElem(list, del))
+		DispList(list);
+	else
+		printf("插入位置不合法，请重新输入!\n");
+	//输出现有图书信息
+	
+}
